@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where am I?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            color: white;
+            font-size: 24px;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .text-center {
+            display: none;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            background-image: linear-gradient(
+                top-16,
+                rgba(255,255,255,0) 0%,
+                transparent 37.5%,
+                transparent 50%,
+                transparent 100%
+            );
+            position: relative;
+        }
+
+        .text-center span {
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            margin-bottom: -40px;
+            opacity: 0.8;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .start-now-btn {
+            color: #ff6b6b !important;
+            font-weight: bold;
+            background-color: white;
+            border: 2px solid #ff6b6b;
+            padding: 10px 20px;
+            text-decoration: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .start-now-btn:hover {
+            background-color: #ff6b6b;
+            color: white !important;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            color: black;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: popupAnimation 0.5s ease-in-out forwards;
+            width: 400px;
+            height: 300px;
+        }
+
+        .popup button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #ff6b6b;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .popup button:hover {
+            background-color: #ff82bc;
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            transform: rotate(45deg);
+            animation: float 5s infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: -10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes popupAnimation {
+            from { transform: translate(-50%, -60%); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        .correct-popup-content {
+            font-size: 24px; /* Smaller font size compared to the popup box */
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .gif-container {
+            display: none;
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            width: 200px;
+            height: auto;
+        }
+
+        #no-btn {
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="gif-container" id="gif-container">
+        <div class="tenor-gif-embed" data-postid="14163861890906326487" data-share-method="host" data-aspect-ratio="1" data-width="100%">
+            <a href="https://tenor.com/view/milk-and-mocha-milk-mocha-urso-bear-gif-14163861890906326487">Milk And Mocha Urso Sticker</a> from 
+            <a href="https://tenor.com/search/milk+and+mocha-stickers">Milk And Mocha Stickers</a>
+        </div>
+        <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+    </div>
+
+    <div class="text-center">
+        <span>Click the button below!</span>
+    </div>
+
+    <button class="start-now-btn">Press Me</button>
+
+    <div class="popup" id="popup">
+        <h2>Will You Be My Valentine?</h2>
+        <button onclick="handleResponse('Yes')">Yes</button>
+        <button id="no-btn">No</button>
+    </div>
+
+    <div class="popup" id="correct-popup" style="display: none; width: 200px; height: 150px;">
+        <h2 class="correct-popup-content">Woohoo!!!</h2>
+    </div>
+
+    <div class="hearts" id="hearts"></div>
+
+    <script>
+        document.querySelector('.start-now-btn').addEventListener('click', function() {
+            document.getElementById('popup').style.display = 'block';
+        });
+
+        function handleResponse(response) {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('correct-popup').style.display = 'block';
+            document.getElementById('gif-container').style.display = 'block';
+            document.body.style.background = 'pink';
+            document.body.style.color = 'white';
+            document.querySelector('.text-center').style.display = 'flex';
+            createHearts();
+        }
+
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+                heartsContainer.appendChild(heart);
+                setTimeout(() => {
+                    heart.remove();
+                }, 5000);
+            }, 200);
+        }
+
+        document.getElementById('no-btn').addEventListener('click', function() {
+            this.style.pointerEvents = 'none'; // Disable pointer events
+            moveButton(this);
+        });
+
+        function moveButton(button) {
+            let x = button.offsetLeft;
+            let y = button.offsetTop;
+            let dirX = 1;
+            let dirY = 1;
+            const speed = 4; // Speed at which the button moves
+            const buttonWidth = button.offsetWidth;
+            const buttonHeight = button.offsetHeight;
+
+            // Ensure the button has absolute positioning
+            button.style.position = 'absolute';
+
+            function animate() {
+                const popup = document.getElementById('popup');
+                const popupHeight = popup.clientHeight;
+                const popupWidth = popup.clientWidth;
+
+                // Check for collision with popup edges and prevent going out of bounds
+                if (y + buttonHeight >= popupHeight || y <= 0) {
+                    dirY *= -1; // Reverse vertical direction
+                }
+                if (x + buttonWidth >= popupWidth || x <= 0) {
+                    dirX *= -1; // Reverse horizontal direction
+                }
+
+                // Move the button by adjusting its x and y position
+                x += dirX * speed;
+                y += dirY * speed;
+
+                // Update the button's new position
+                button.style.left = `${x}px`;
+                button.style.top = `${y}px`;
+
+                // Continue the animation using requestAnimationFrame
+                requestAnimationFrame(animate);
+            }
+
+            animate(); // Start the animation
+        }
+    </script>
+</body>
+</html>
